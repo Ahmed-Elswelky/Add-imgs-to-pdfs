@@ -1,26 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, signal, ViewChild } from '@angular/core';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { PDFDocument } from 'pdf-lib';
 @Component({
   selector: 'app-pdf-editor-component',
-  imports: [PdfViewerModule, CommonModule],
+  imports: [PdfViewerModule, CommonModule, NgxExtendedPdfViewerModule],
   templateUrl: './pdf-editor-component.html',
   styleUrl: './pdf-editor-component.scss',
   standalone: true,
 })
 export class PdfEditorComponent {
   pdfSrc = signal<string | undefined>(undefined);
-  logoBytes = signal<Uint8Array | undefined>(undefined);
   isLoading = signal(false);
-  uploadedPdfBytes = signal<any | undefined>(undefined);
-  logoFileType = signal<string | undefined>(undefined);
-  currentPdfDoc?: PDFDocument;
   modifiedPdfBytes?: Uint8Array;
+  currentPdfDoc?: PDFDocument;
+  uploadedPdfBytes = signal<any | undefined>(undefined);
+  originalPdfBytes = signal<Uint8Array | undefined>(undefined);
+  
+  logoBytes = signal<Uint8Array | undefined>(undefined);
+  logoFileType = signal<string | undefined>(undefined);
   logoPosition: { left: number; top: number } | null = null;
   @ViewChild('logoEl') logoEl?: ElementRef<HTMLImageElement>;
   logoSize = { width: 100, height: 100 };
-  originalPdfBytes = signal<Uint8Array | undefined>(undefined);
   private dragging = false;
   private dragOffset = { x: 0, y: 0 };
   private resizing = false;
@@ -46,6 +48,9 @@ export class PdfEditorComponent {
     );
     this.pdfSrc.set(url);
     this.isLoading.set(false);
+
+    console.log(url);
+    
   }
   async onLogoUpload(e: Event) {
     const input = e.target as HTMLInputElement;
